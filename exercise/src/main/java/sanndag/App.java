@@ -21,45 +21,56 @@ Ante cualquier duda o ambigüedad en el enunciado, es libre de hacer todas las s
 necesarias, siempre y cuando las especifique.
 */
 
+import java.util.*;
+
 public class App
 {
     public static void main( String[] args )
     {
+        Scanner sc = new Scanner(System.in);
 
         long start, end;
         double time;
 
-        /*
-        Ejemplo 1
-        Input: nums = [1,4,3,9], requiredSum = 8
-        Output: False
-        */
-        int [] nums = {1,4,3,9};
+        int targetN, numArr, length;
 
+        System.out.println("Enter the target number: ");
+        targetN = sc.nextInt();
+
+        System.out.println("Enter the length to create the array");
+        length = sc.nextInt();
+
+        int [] nums = new int[length];
+
+        System.out.println("Enter the numbers to be inserted in the array: ");
+        for(int i = 0; i < length; i++){
+            System.out.println("Entered number at position:" + "[" + i + "]");
+            numArr = sc.nextInt();
+            nums[i] = numArr;
+        }
+
+        System.out.println("Array elements:");
+        for(int i : nums){
+            System.out.print(i +" ");
+        }
+
+        System.out.println("\n------------EXAMPLE 1------------");
         start = System.nanoTime();
         System.out.println("Start: " + start);
 
-        System.out.println(algorithmSlow(nums, 8));
-        //return false
+        System.out.println(algorithmSlow(nums, targetN));
 
         end = System.nanoTime();
         System.out.println("End: " + end);
+
         time = end - start;
         System.out.println("Total time:" + time + "\n---------------------------------------");
 
-        /*
-        Ejemplo 2
-        Input: nums = [1,2,4,4], requiredSum = 8
-        Output: True
-         */
-
-        int [] nums2 = {1,2,4,4};
-
+        System.out.println("------------EXAMPLE 2------------");
         start = System.nanoTime();
         System.out.println("Start: " + start);
 
-        System.out.println(algorithmFast(nums2, 8));
-        //return true
+        System.out.println(algorithmFast(nums, targetN));
 
         end = System.nanoTime();
         System.out.println("End: " + end);
@@ -68,37 +79,40 @@ public class App
 
     }
 
-    //Ejemplo 1: algoritmo de desarrollo rápido pero que tarda más al ejecutarse ya que compara
-    //secuencialmente cada elemento del array, se podría haber hecho mas ineficiente con 2 ciclos for
-    //pero se pide que se desarrolle en el menor tiempo posible
+    /*
+    1. Un algoritmo que resuelva el problema asumiendo que la máquina en donde va a correrse el
+    programa tiene recursos infinitos, que el tiempo de ejecución no importa y que lo más
+    importante es realizar el desarrollo en el menor tiempo posible.
+    */
     static boolean algorithmSlow(int[] nums, int target){
 
-        for(int i = 0; i < nums.length - 1; i++){
-            if(nums[i] + nums[i+1] == target){
-                return true;
+        for(int i = 0; i < nums.length; i++){
+            for(int j = 0; j < nums.length; j++){
+                if(nums[i] + nums[j] == target){
+                    return true;
+                }
             }
         }
         return false;
     }
 
-    //Ejemplo 2: algoritmo con más lineas de codigo pero tiene mayor eficiencia al ejecutarse
-    // ya que no comparamos secuencialmente, sino que buscamos el complemento del target, y si este
-    //se encuentra en el array, retorna true.
-    //hace poco realicé en leetcode un ejercicio parecido llamado twoSums, donde utilice un Map utilizando
-    //el metodo .containsKey
-    //estaba en la duda si en este ejercicio utilizar alguna collection que tenga el metodo .contains
-    // pero lo terminé realizando de la siguiente manera.
+    /*
+    2. Un algoritmo que resuelva el problema asumiendo que los recursos son un bien preciado,
+    que el tiempo de ejecución si importa y que el tiempo de desarrollo no es importante.
+    */
+    static boolean algorithmFast(int[] nums, int target) {
+        Set<Integer> numbers = new HashSet<>();
 
-    static boolean algorithmFast(int[] nums, int target){
-        int n;
+        for (int num : nums) {
+            int n = target - num;
 
-        for(int i = 0; i < nums.length - 1; i++){
-            n = target - nums[i];
-
-            if(nums[i] == n){
+            if (numbers.contains(n)) {
                 return true;
             }
+
+            numbers.add(num);
         }
+
         return false;
     }
 }
